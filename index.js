@@ -9,19 +9,18 @@ const client = new MongoClient('mongodb+srv://database-user-1:databaseofzubayer@
 const run = () => {
     try {
         client.connect()
-        const expenseSummaryCollection = client.db('bachelor').collection('expenseSummary')
-        const expenseDetailsCollection = client.db('bachelor').collection('expenseDetails')
-        app.post('/add-details', async (req, res)=>{
-            const details = req.body;
-            expenseDetailsCollection.insertOne(details)
-            console.log(details)
+        const dateCollection = client.db("bachelor's-website").collection('date-collection')
+        app.post('/add-date', async (req, res)=>{
+            const date = req.body;
+            dateCollection.insertOne(date)
+            res.send({message: 'Date Added'})
         })
-        app.post('/expense', async (req, res)=>{
-            const details = req.body;
-            expenseDetailsCollection.insertOne(details)
-            console.log(details)
+        app.get('/get-all-date', async (req, res)=>{
+            const cursor = dateCollection.find({})
+            const allDate = await cursor.toArray()
+            res.send(allDate)
         })
-    } finally{}
+    } finally { }
 }
 run()
 app.get('/', (req, res) => {
