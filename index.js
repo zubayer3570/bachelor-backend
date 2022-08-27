@@ -20,6 +20,11 @@ const run = () => {
             const allDate = await cursor.toArray()
             res.send(allDate)
         })
+        app.get('/all-date', async (req, res)=>{
+            const cursor = dateCollection.query({})
+            const result = await cursor.toArray()
+            res.send(result)
+        })
     } finally { }
 }
 run()
