@@ -9,21 +9,53 @@ const client = new MongoClient('mongodb+srv://database-user-1:databaseofzubayer@
 const run = () => {
     try {
         client.connect()
-        const dateCollection = client.db("bachelor's-website").collection('date-collection')
-        app.post('/add-date', async (req, res)=>{
-            const date = req.body;
-            dateCollection.insertOne(date)
-            res.send({message: 'Date Added'})
+        const expenseCollection = client.db("bachelor's-website").collection('expense-collection')
+        const personCollection = client.db("bachelor's-website").collection('person-collection')
+
+        //post
+        app.post('/add-expense', async (req, res) => {
+            const data = req.body;
+            expenseCollection.insertOne(data)
+            res.send({ message: 'Expense Added' })
         })
-        app.get('/get-all-date', async (req, res)=>{
-            const cursor = dateCollection.find({})
-            const allDate = await cursor.toArray()
-            res.send(allDate)
+        app.post('/add-person', async (req, res) => {
+            const data = req.body;
+            personCollection.insertOne(data)
+            res.send({ message: 'Person Added' })
         })
-        app.get('/all-date', async (req, res)=>{
-            const cursor = dateCollection.query({})
+        app.post('/update-meal-count', async (req, res) => {
+            const data = req.body;
+            const getData = await personCollection.findOne({ name: data.name })
+            getData.mealCount[data.index][1] = data.mealCountUpdate
+            const result = await personCollection.updateOne({ name: data.name }, { $set: { mealCount: getData.mealCount } })
+            res.send({ message: result })
+        })
+        //get
+        app.get('/get-expenses', async (req, res) => {
+            const cursor = expenseCollection.find({})
+            const result = await cursor.toArray()
+            console.log('hi')
+            res.send(result)
+        })
+        app.get('/get-person', async (req, res) => {
+            const cursor = personCollection.find({})
             const result = await cursor.toArray()
             res.send(result)
+        })
+        app.get('/get-person-data/:person', async (req, res) => {
+            const personName = req.params.person
+            const result = await personCollection.findOne({ name: personName })
+            res.send(result)
+        })
+        app.get('/get-total-meal', async (req, res) => {
+            const cursor = personCollection.find({})
+            const data = await cursor.toArray()
+            let totalMeal = 0;
+            data.forEach(singleData => {
+                singleData.mealCount.forEach(singleDay => totalMeal += singleDay[1])
+            })
+            console.log(totalMeal)
+            res.send({ data })
         })
     } finally { }
 }
