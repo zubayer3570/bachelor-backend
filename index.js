@@ -31,11 +31,17 @@ const run = () => {
             res.send({ message: result })
         })
         //get
-        app.get('/get-expenses', async (req, res) => {
+        app.get('/get-expenses-details', async (req, res) => {
             const cursor = expenseCollection.find({})
             const result = await cursor.toArray()
-            console.log('hi')
             res.send(result)
+        })
+        app.get('/get-total-expense-amount', async (req, res) => {
+            const cursor = expenseCollection.find({})
+            const data = await cursor.toArray()
+            let totalAmount = 0;
+            data.forEach(singleExpense => totalAmount += parseInt(singleExpense.amount))
+            res.send({ totalAmount })
         })
         app.get('/get-person', async (req, res) => {
             const cursor = personCollection.find({})
@@ -54,8 +60,7 @@ const run = () => {
             data.forEach(singleData => {
                 singleData.mealCount.forEach(singleDay => totalMeal += singleDay[1])
             })
-            console.log(totalMeal)
-            res.send({ data })
+            res.send({ totalMeal })
         })
     } finally { }
 }
