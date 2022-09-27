@@ -11,7 +11,6 @@ const run = () => {
         client.connect()
         const expenseCollection = client.db("bachelor's-website").collection('expense-collection')
         const personCollection = client.db("bachelor's-website").collection('person-collection')
-
         //post
         app.post('/add-expense', async (req, res) => {
             const data = req.body;
