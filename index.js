@@ -61,6 +61,22 @@ const run = () => {
             })
             res.send({ totalMeal })
         })
+        app.get('/get-ave-meal-rate', async (req, res) => {
+            const cursor1 = expenseCollection.find({})
+            const data1 = await cursor1.toArray()
+            let totalAmount = 0;
+            data1.forEach(singleExpense => totalAmount += parseInt(singleExpense.amount))
+
+            const cursor2 = personCollection.find({})
+            const data2 = await cursor2.toArray()
+            let totalMeal = 0;
+            data2.forEach(singleData => {
+                singleData.mealCount.forEach(singleDay => totalMeal += singleDay[1])
+            })
+
+            const ave = amountData.totalAmount / mealData.totalMeal
+            res.send({ave})
+        })
     } finally { }
 }
 run()
