@@ -14,12 +14,12 @@ const run = () => {
         //post
         app.post('/add-expense', async (req, res) => {
             const data = req.body;
-            expenseCollection.insertOne(data)
+            await expenseCollection.insertOne(data)
             res.send({ message: 'Expense Added' })
         })
         app.post('/add-person', async (req, res) => {
             const data = req.body;
-            personCollection.insertOne(data)
+            await personCollection.insertOne(data)
             res.send({ message: 'Person Added' })
         })
         app.post('/update-meal-count', async (req, res) => {
