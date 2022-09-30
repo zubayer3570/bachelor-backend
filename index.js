@@ -74,7 +74,7 @@ const run = () => {
                 singleData.mealCount.forEach(singleDay => totalMeal += singleDay[1])
             })
 
-            const ave = amountData.totalAmount / mealData.totalMeal
+            const ave = (totalAmount / totalMeal).toFixed(4)
             res.send({ave})
         })
     } finally { }
