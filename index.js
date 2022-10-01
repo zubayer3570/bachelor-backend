@@ -25,7 +25,10 @@ const run = () => {
         app.post('/update-meal-count', async (req, res) => {
             const data = req.body;
             const getData = await personCollection.findOne({ name: data.name })
-            getData.mealCount[data.index][1] = data.mealCountUpdate
+            let totalMealToday = 0;
+            mealCountUpdate.map(meal=> totalMealToday += meal)
+            getData.mealCount[data.index][1] = totalMealToday
+            getData.mealCount[data.index][2] = data.mealCountUpdate
             const result = await personCollection.updateOne({ name: data.name }, { $set: { mealCount: getData.mealCount } })
             res.send({ message: result })
         })
