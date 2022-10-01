@@ -26,7 +26,7 @@ const run = () => {
             const data = req.body;
             const getData = await personCollection.findOne({ name: data.name })
             let totalMealToday = 0;
-            mealCountUpdate.map(meal=> totalMealToday += meal)
+            data.mealCountUpdate.map(meal=> totalMealToday += meal)
             getData.mealCount[data.index][1] = totalMealToday
             getData.mealCount[data.index][2] = data.mealCountUpdate
             const result = await personCollection.updateOne({ name: data.name }, { $set: { mealCount: getData.mealCount } })
