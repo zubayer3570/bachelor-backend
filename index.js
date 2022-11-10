@@ -52,25 +52,34 @@ const run = () => {
         app.post('/add-to-meal/:name', async (req, res) => {
             const { name } = req.params;
             const { amount } = req.body;
-            const accountData = await accountsCollection.findOne({name})
+            const accountData = await accountsCollection.findOne({ name })
             accountData.addedToMeal.push(parseInt(amount))
-            await accountsCollection.updateOne({name}, {$set: {addedToMeal: accountData.addedToMeal}})
+            await accountsCollection.updateOne({ name }, { $set: { addedToMeal: accountData.addedToMeal } })
             res.send({ message: 'Added to Meal' })
         })
         app.post('/add-to-other/:name', async (req, res) => {
             const { name } = req.params;
             const { amount } = req.body;
-            const accountData = await accountsCollection.findOne({name})
+            const accountData = await accountsCollection.findOne({ name })
             accountData.addedToOther.push(parseInt(amount))
-            await accountsCollection.updateOne({name}, {$set: {addedToOther: accountData.addedToOther}})
+            await accountsCollection.updateOne({ name }, { $set: { addedToOther: accountData.addedToOther } })
             res.send({ message: 'Added to Other' })
         })
 
         //get
         app.get('/get-expenses-details', async (req, res) => {
+            let totalMealExpense = 0;
+            let totalAddedToMeal = 0
             const cursor = expenseCollection.find({})
             const result = await cursor.toArray()
-            res.send(result)
+            result.map(expense => parseInt(expense.amount) += totalMealExpense)
+            const cursor1 = accountsCollection.find({})
+            const allAccountDetails = await cursor1.toArray()
+            allAccountDetails.map(account => {
+                account.addedToMeal.map(amount => amount += totalAddedToMeal)
+            })
+            const mealBalance = totalAddedToMeal - totalMealExpense
+            res.send({ expenseDetails, mealBalance })
         })
         app.get('/get-person', async (req, res) => {
             const cursor = personCollection.find({})
