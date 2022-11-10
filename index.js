@@ -71,12 +71,12 @@ const run = () => {
             let totalMealExpense = 0;
             let totalAddedToMeal = 0
             const cursor = expenseCollection.find({})
-            const result = await cursor.toArray()
-            result.map(expense => parseInt(expense.amount) += totalMealExpense)
+            const expenseDetails = await cursor.toArray()
+            expenseDetails.map(expense => totalMealExpense += parseInt(expense.amount))
             const cursor1 = accountsCollection.find({})
             const allAccountDetails = await cursor1.toArray()
             allAccountDetails.map(account => {
-                account.addedToMeal.map(amount => amount += totalAddedToMeal)
+                account.addedToMeal.map(amount => totalAddedToMeal += amount)
             })
             const mealBalance = totalAddedToMeal - totalMealExpense
             res.send({ expenseDetails, mealBalance })
