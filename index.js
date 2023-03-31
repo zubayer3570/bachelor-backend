@@ -19,11 +19,11 @@ const run = () => {
             await expenseCollection.insertOne(data)
             res.send({ message: 'Expense Added' })
         })
-        app.post('/add-person', async (req, res) => {
-            const data = req.body;
-            await personCollection.insertOne(data)
-            res.send({ message: 'Person Added' })
-        })
+        // app.post('/add-person', async (req, res) => {
+        //     const data = req.body;
+        //     await personCollection.insertOne(data)
+        //     res.send({ message: 'Person Added' })
+        // })
         app.post('/update-meal-count', async (req, res) => {
             const data = req.body;
             const getData = await personCollection.findOne({ name: data.name })
@@ -41,12 +41,50 @@ const run = () => {
         })
         app.post('/add-account/:name', async (req, res) => {
             const { name } = req.params;
-            const data = {
-                name: name,
+            const accountData = {
+                name,
                 addedToMeal: [0],
                 addedToOther: [0]
             }
-            await accountsCollection.insertOne(data)
+            const days = [
+                ["1", 0, [0, 0, 0]],
+                ["2", 0, [0, 0, 0]],
+                ["3", 0, [0, 0, 0]],
+                ["4", 0, [0, 0, 0]],
+                ["5", 0, [0, 0, 0]],
+                ["6", 0, [0, 0, 0]],
+                ["7", 0, [0, 0, 0]],
+                ["8", 0, [0, 0, 0]],
+                ["9", 0, [0, 0, 0]],
+                ["10", 0, [0, 0, 0]],
+                ["11", 0, [0, 0, 0]],
+                ["12", 0, [0, 0, 0]],
+                ["13", 0, [0, 0, 0]],
+                ["14", 0, [0, 0, 0]],
+                ["15", 0, [0, 0, 0]],
+                ["16", 0, [0, 0, 0]],
+                ["17", 0, [0, 0, 0]],
+                ["18", 0, [0, 0, 0]],
+                ["19", 0, [0, 0, 0]],
+                ["20", 0, [0, 0, 0]],
+                ["21", 0, [0, 0, 0]],
+                ["22", 0, [0, 0, 0]],
+                ["23", 0, [0, 0, 0]],
+                ["24", 0, [0, 0, 0]],
+                ["25", 0, [0, 0, 0]],
+                ["26", 0, [0, 0, 0]],
+                ["27", 0, [0, 0, 0]],
+                ["28", 0, [0, 0, 0]],
+                ["29", 0, [0, 0, 0]],
+                ["30", 0, [0, 0, 0]],
+                ["31", 0, [0, 0, 0]]
+            ]
+            const mealData = {
+                name,
+                mealCount: days
+            }
+            await personCollection.insertOne(mealData)
+            await accountsCollection.insertOne(accountData)
             res.send({ message: 'Account Added' })
         })
         app.post('/add-to-meal/:name', async (req, res) => {
@@ -92,11 +130,11 @@ const run = () => {
             res.send(result)
         })
         app.get('/get-ave-meal-rate', async (req, res) => {
-            const cursor1 = expenseCollection.find({}).project({date: 0, description: 0})
+            const cursor1 = expenseCollection.find({}).project({ date: 0, description: 0 })
             const data1 = await cursor1.toArray()
             let totalAmount = 0;
             data1.forEach(singleExpense => totalAmount += parseInt(singleExpense.amount))
-            
+
             const cursor2 = personCollection.find({})
             const data2 = await cursor2.toArray()
             let totalMeal = 0;
