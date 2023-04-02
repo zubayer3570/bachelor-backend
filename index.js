@@ -43,7 +43,7 @@ const run = () => {
             const { name } = req.params;
             const accountData = {
                 name,
-                addedToMeal: [0],
+                addedToMeal: [],
                 addedToOther: [0]
             }
             const days = [
@@ -90,9 +90,14 @@ const run = () => {
         app.post('/add-to-meal/:name', async (req, res) => {
             const { name } = req.params;
             const { amount } = req.body;
-            const accountData = await accountsCollection.findOne({ name })
-            accountData.addedToMeal.push(parseInt(amount))
-            await accountsCollection.updateOne({ name }, { $set: { addedToMeal: accountData.addedToMeal } })
+            const date = String(new Date()).substring(0, 24)
+            const data = {
+                amount: parseInt(amount),
+                date
+            }
+            // const accountData = await accountsCollection.findOne({ name })
+            // accountData.addedToMeal.push(parseInt(amount))
+            await accountsCollection.updateOne({ name }, { $push: { addedToMeal: data } })
             res.send({ message: 'Added to Meal' })
         })
         app.post('/add-to-other/:name', async (req, res) => {
@@ -114,7 +119,7 @@ const run = () => {
             const cursor1 = accountsCollection.find({})
             const allAccountDetails = await cursor1.toArray()
             allAccountDetails.map(account => {
-                account.addedToMeal.map(amount => totalAddedToMeal += amount)
+                account.addedToMeal.map(payment => totalAddedToMeal += payment.amount)
             })
             const mealBalance = totalAddedToMeal - totalMealExpense
             res.send({ expenseDetails, mealBalance })
@@ -183,8 +188,13 @@ const run = () => {
             const personName = req.params.name
             const result = await accountsCollection.findOne({ name: personName })
             let addedToMeal = 0
-            result.addedToMeal.map(amount => addedToMeal += amount)
+            result.addedToMeal.map(data => addedToMeal += data.amount)
             res.send({ addedToMeal });
+        })
+        app.get('/get-meal-payment-details/:name', async (req, res)=>{
+            const {name} = req.params
+            const data = await accountsCollection.findOne({name})
+            res.send({data})
         })
     } finally { }
 }
