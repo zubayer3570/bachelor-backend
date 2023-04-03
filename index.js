@@ -122,7 +122,7 @@ const run = () => {
                 account.addedToMeal.map(payment => totalAddedToMeal += payment.amount)
             })
             const mealBalance = totalAddedToMeal - totalMealExpense
-            res.send({ expenseDetails, mealBalance })
+            res.send({ expenseDetails, mealBalance, totalMealExpense })
         })
         app.get('/get-person', async (req, res) => {
             const cursor = personCollection.find({})
