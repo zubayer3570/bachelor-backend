@@ -183,9 +183,9 @@ const run = () => {
         app.get('/added-to-other/:name', async (req, res) => {
             const personName = req.params.name
             const result = await accountsCollection.findOne({ name: personName })
-            let addedToOther = 0
-            result.addedToOther.map(amount => addedToOther.amount += amount)
-            res.send({ addedToOther });
+            let totalAddedToOther = 0
+            result.addedToOther.map(payment => totalAddedToOther.amount += payment.amount)
+            res.send({ totalAddedToOther });
         })
         app.get('/added-to-meal/:name', async (req, res) => {
             const personName = req.params.name
