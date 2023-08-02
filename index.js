@@ -107,8 +107,7 @@ const run = () => {
                 amount: parseInt(amount),
                 date
             }
-            // const accountData = await accountsCollection.findOne({ name })
-            // accountData.addedToOther.push(parseInt(amount))
+
             await accountsCollection.updateOne({ name }, { $push: { addedToOther: data } })
             res.send({ message: 'Added to Other' })
         })
@@ -195,7 +194,7 @@ const run = () => {
             result.addedToMeal.map(data => addedToMeal += data.amount)
             res.send({ addedToMeal });
         })
-        app.get('/get-meal-payment-details/:name', async (req, res) => {
+        app.get('/get-payment-details/:name', async (req, res) => {
             const { name } = req.params
             const data = await accountsCollection.findOne({ name })
             res.send({ data })
