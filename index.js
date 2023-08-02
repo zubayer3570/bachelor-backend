@@ -44,7 +44,7 @@ const run = () => {
             const accountData = {
                 name,
                 addedToMeal: [],
-                addedToOther: [0]
+                addedToOther: [{}]
             }
             const days = [
                 ["1", 0, [0, 0, 0]],
@@ -185,7 +185,7 @@ const run = () => {
             const personName = req.params.name
             const result = await accountsCollection.findOne({ name: personName })
             let addedToOther = 0
-            result.addedToOther.map(amount => addedToOther += amount)
+            result.addedToOther.map(amount => addedToOther.amount += amount)
             res.send({ addedToOther });
         })
         app.get('/added-to-meal/:name', async (req, res) => {
